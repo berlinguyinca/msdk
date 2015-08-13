@@ -19,30 +19,36 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datapointstore.DataPointStore;
+import io.github.msdk.datapointstore.MSDKDataStore;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RawDataimportTest {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final String TEST_DATA_PATH_XML = "src/test/resources/rawdataimport/xml";
+    private static final String TEST_DATA_PATH_CDF = "src/test/resources/rawdataimport/netcdf";
+    private static final String TEST_DATA_PATH_THERMO = "src/test/resources/rawdataimport/thermo";
 
     @Ignore("not ready yet")
     @Test
     public void testXMLFileImport() throws Exception {
 
-        File inputFiles[] = new File("src/test/resources/rawdataimport/xml")
-                .listFiles();
+        File inputFiles[] = new File(TEST_DATA_PATH_XML).listFiles();
 
         assertNotNull(inputFiles);
         assertNotEquals(0, inputFiles.length);
 
         int filesTested = 0;
         for (File inputFile : inputFiles) {
-            importFile(inputFile);
+            testFile(inputFile);
             filesTested++;
         }
 
@@ -54,15 +60,14 @@ public class RawDataimportTest {
     @Test
     public void testCDFFileImport() throws Exception {
 
-        File inputFiles[] = new File("src/test/resources/rawdataimport/netcdf")
-                .listFiles();
+        File inputFiles[] = new File(TEST_DATA_PATH_CDF).listFiles();
 
         assertNotNull(inputFiles);
         assertNotEquals(0, inputFiles.length);
 
         int filesTested = 0;
         for (File inputFile : inputFiles) {
-            importFile(inputFile);
+            testFile(inputFile);
             filesTested++;
         }
 
@@ -76,15 +81,15 @@ public class RawDataimportTest {
         // Run this test only on Windows
         assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
-        File inputFiles[] = new File("src/test/resources/rawdataimport/thermo")
-                .listFiles();
+        File inputFiles[] = new File(TEST_DATA_PATH_THERMO).listFiles();
 
         assertNotNull(inputFiles);
         assertNotEquals(0, inputFiles.length);
 
         int filesTested = 0;
         for (File inputFile : inputFiles) {
-            importFile(inputFile);
+            testFile(inputFile);
+
             filesTested++;
         }
 
@@ -106,7 +111,7 @@ public class RawDataimportTest {
 
         int filesTested = 0;
         for (File inputFile : inputFiles) {
-            importFile(inputFile);
+            testFile(inputFile);
             filesTested++;
         }
 
@@ -114,17 +119,21 @@ public class RawDataimportTest {
         // assertTrue(filesTested > 0);
     }
 
-    private void importFile(File inputFile) throws Exception {
+    private void testFile(File inputFile) throws Exception {
 
         logger.info("Checking import of file " + inputFile.getName());
 
-        RawDataFileImportAlgorithm importer = new RawDataFileImportAlgorithm(
-                inputFile);
-        importer.execute();
-        RawDataFile rawFile = importer.getResult();
+        DataPointStore dataStore = MSDKDataStore.getTmpFileDataPointStore();
+
+        RawDataFileImportMethod importer = new RawDataFileImportMethod(
+                inputFile, dataStore);
+
+        RawDataFile rawFile = importer.execute();
 
         assertNotNull(rawFile);
         assertNotEquals(rawFile.getScans().size(), 0);
+
+        rawFile.dispose();
 
     }
 }

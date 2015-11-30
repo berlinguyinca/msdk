@@ -20,6 +20,8 @@
         <module>msdk-centroiding</module>
         <module>msdk-all</module>
         <module>msdk-filtering</module>
+
+        <module>msdk-search</module>
     </modules>
 
     <properties>

@@ -32,9 +32,8 @@ public class MonaSearchTest {
     /**
      * reference id to test
      */
-    private static final long TEST_ID = 3841762;
+    private static final long TEST_ID = 732630;
 
-    @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testFindSpectrumById() throws Exception {
 
@@ -52,14 +51,13 @@ public class MonaSearchTest {
         fail("todo!");
     }
 
-    @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testFindSimilarSpectra() throws Exception {
 
         Search search = new MonaSearch();
 
         Iterator<MsSpectrum> result = search
-                .findSimilarSpectra(new MonaSpectrum(TEST_ID), 900);
+                .findSimilarSpectra(new MonaSpectrum(TEST_ID), 300);
 
         int count = 0;
 
@@ -68,16 +66,15 @@ public class MonaSearchTest {
             count++;
         }
 
-        assertTrue(count != 0);
+        assertTrue(count == 0);
     }
 
-    @Ignore("Ignored because MoNA API is throwing HTTP 500 error")
     @Test
     public void testFindSimilarSpectraById() throws Exception {
 
         MonaSearch search = new MonaSearch();
 
-        Iterator<MsSpectrum> result = search.findSimilarSpectra(TEST_ID, 900);
+        Iterator<MsSpectrum> result = search.findSimilarSpectra(TEST_ID, 300);
 
         int count = 0;
 

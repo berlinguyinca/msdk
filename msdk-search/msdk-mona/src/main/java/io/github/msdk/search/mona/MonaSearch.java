@@ -55,7 +55,8 @@ public class MonaSearch implements Search, MonaConfiguration {
      */
     @Override
     public @Nonnull Iterator<MsSpectrum> findSpectrumByProperty(String propertyName, Serializable propertyValue) throws IOException {
-        return getMsSpectrumIterator(null);
+
+        throw new RuntimeException("not yet implemented!");
     }
 
     /**
